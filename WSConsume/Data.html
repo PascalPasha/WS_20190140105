@@ -1,0 +1,56 @@
+<DOCTYPE html>
+ <html>
+ <head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <title>Data Mahasiswa</title>
+  
+ </head>
+ <body>
+  <h1>Web Service Consume</h1>
+  <hr>
+  <div class="container">
+   <button class="btn btn-primary" onclick="getdataJSON()">Data JSON</button>
+   <button class="btn btn-primary" onclick="getdataXML()">Data XML</button>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="./jquery.js"></script>
+  <script>
+   function getdataJSON(){
+    let url = "http://localhost:8084/mahasiswajson";
+    $.getJSON(url, function(data){ 
+    $.each(data, function (index) {  
+      console.log(data[index]); 
+      var text = document.createElement("div"); 
+      text.innerHTML += data[index].nim + " - " + data[index].nama + " - " + data[index].alamat + " - " + data[index].fakultas + " - " + data[index].prodi; 
+      $(".container").append(text); 
+    }); 
+  }); 
+
+   }
+   
+   function getdataXML(){ 
+  let url = "http://localhost:8084/mahasiswa/dataxml"; 
+ 
+  $.ajax({
+  type:"GET",
+  url:url,
+  dataType:"xml",
+  success:function xmlData(xml){
+	console.log(xml);
+	const x = xml.getElementsByTagName("item");
+	for (var i = 0; i < x.length; i++){
+		var text = document.createElement("div");
+		text.innerHTML += x[i].getElementsByTagName("nim")[0].childNodes[0].nodeValue + " - " + x[i].getElementsByTagName("nama")[0].childNodes[0].nodeValue + " - " + x[i].getElementsByTagName("alamat")[0].childNodes[0].nodeValue + " - " + x[i].getElementsByTagName("fakultas")[0].childNodes[0].nodeValue + " - " + x[i].getElementsByTagName("prodi")[0].childNodes[0].nodeValue;
+		$(".container").append(text);
+	}
+},
+});
+}
+
+  </script>
+ </body>
+ </html>
